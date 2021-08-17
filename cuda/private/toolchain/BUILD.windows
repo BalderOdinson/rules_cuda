@@ -1,0 +1,59 @@
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+load(":local_cuda_config.bzl", "cuda_toolchain_config")
+load("@rules_cuda//cuda:defs.bzl", "cuda_toolchain")
+
+filegroup(
+    name = "libcudart",
+    srcs = [
+        ":cuda_tools/lib/x64/cudart.lib",
+    ],
+)
+
+filegroup(
+    name = "libcublas",
+    srcs = [
+        ":cuda_tools/lib/x64/cublas.lib",
+    ] + glob([
+        "cuda_tools/include/cublas*.h",
+    ]),
+)
+
+filegroup(
+    name ="cuda_tools",
+    srcs = glob([
+        "cuda_tools/bin/**",
+        "cuda_tools/include/**",
+        "cuda_tools/lib64/**",
+    ]),
+)
+
+cuda_toolchain_config(
+    name = "local_config",
+    tools = [":cuda_tools"],
+)
+
+cuda_toolchain(
+    name = "local_cuda_toolchain",
+    config = ":local_config",
+    libraries = [
+        ":libcudart"
+    ],
+)
+
+toolchain(
+    name = "local_toolchain",
+    exec_compatible_with = [
+        "@platforms//os:windows",
+        "@platforms//cpu:x86_64",
+    ],
+    target_compatible_with = [
+        "@platforms//os:windows",
+        "@platforms//cpu:x86_64",
+    ],
+    toolchain = ":local_cuda_toolchain",
+    toolchain_type = "@rules_cuda//cuda:toolchain_type",
+)
+

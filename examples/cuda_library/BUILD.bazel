@@ -1,0 +1,24 @@
+load("@rules_cuda//cuda:defs.bzl", "cuda_library")
+
+cuda_library(
+    name = "test",
+    srcs = [
+        "test.cu",
+    ],
+    hdrs = [
+        "test.h",
+    ],
+    deps = [
+        "//cuda_library/lib:sum",
+    ],
+)
+
+cc_binary(
+    name = "main",
+    srcs = [
+        ":main.cpp",
+    ],
+    deps = [
+        ":test",
+    ],
+)
