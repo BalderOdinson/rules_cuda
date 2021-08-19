@@ -9,7 +9,7 @@ Read more in the docs section.
 
 Add this to your WORKSPACE to include rules_cuda.
 
-```
+```python
 http_archive(
     name = "rules_cuda",
     sha256 = "<sha>",
@@ -22,7 +22,13 @@ cuda_toolchain()
 ```
 ## Documentation
 
-Documentation on how to use rules_cuda: <url>
+Documentation on how to use rules_cuda: [link](https://github.com/BalderOdinson/rules_cuda/blob/main/docs/README.md)
+
+## Examples
+
+Examples are available inside this repository in folder [examples](https://github.com/BalderOdinson/rules_cuda/tree/main/examples).
+
+*Note - to run an example you must be positioned inside examples directory.*
 
 ## Contributions
 
