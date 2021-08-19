@@ -9,11 +9,11 @@ Read more in the docs section.
 
 Add this to your WORKSPACE to include rules_cuda.
 
-```
+```python
 http_archive(
     name = "rules_cuda",
-    sha256 = "<sha>",
-    urls = ["<url>"],
+    sha256 = "80c210afb4eb9b7c6b7f1b207f15bcb93d06e8d9ae6daf70b807c799904f39f0",
+    urls = ["https://github.com/BalderOdinson/rules_cuda/releases/download/0.0.2/rules_cuda-v0.0.2.tar.gz"],
 )
 
 # Add lines below to use local CUDA toolchain.
@@ -22,7 +22,13 @@ cuda_toolchain()
 ```
 ## Documentation
 
-Documentation on how to use rules_cuda: <url>
+Documentation on how to use rules_cuda: [link](https://github.com/BalderOdinson/rules_cuda/blob/main/docs/README.md)
+
+## Examples
+
+Examples are available inside this repository in folder [examples](https://github.com/BalderOdinson/rules_cuda/tree/main/examples).
+
+*Note - to run an example you must be positioned inside examples directory.*
 
 ## Contributions
 

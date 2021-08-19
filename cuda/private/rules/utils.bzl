@@ -7,7 +7,7 @@ def is_object_file(src):
     return src.extension in ["obj", "o"]
 
 def is_static_input(src):
-    return src.extension in ["a", "lib"]
+    return src.extension in ["a", "lib", "lo"]
 
 def is_source_file(src):
     return src.extension in ["c", "cc", "cpp", "cxx", "c++", "C", "cu"]
@@ -140,7 +140,7 @@ def preprocess_inputs(ctx, rule_kind):
     local_system_include_paths = []
     include_paths = []
     quote_include_paths = []
-    system_include_paths = []
+    system_include_paths = list(ctx.attr.includes)
     # Defines
     local_defines = list(ctx.attr.local_defines)
     defines = list(ctx.attr.defines)
