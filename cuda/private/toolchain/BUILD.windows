@@ -1,6 +1,4 @@
-package(
-    default_visibility = ["//visibility:public"],
-)
+package(default_visibility = ["//visibility:public"])
 
 load(":local_cuda_config.bzl", "cuda_toolchain_config")
 load("@rules_cuda//cuda:defs.bzl", "cuda_toolchain")
@@ -22,7 +20,7 @@ filegroup(
 )
 
 filegroup(
-    name ="cuda_tools",
+    name ="all_files",
     srcs = glob([
         "cuda_tools/bin/**",
         "cuda_tools/include/**",
@@ -32,14 +30,17 @@ filegroup(
 
 cuda_toolchain_config(
     name = "local_config",
-    tools = [":cuda_tools"],
+    nvcc = ":cuda_tools/bin/nvcc",
 )
 
 cuda_toolchain(
     name = "local_cuda_toolchain",
     config = ":local_config",
     libraries = [
-        ":libcudart"
+        ":libcudart",
+    ],
+    all_files = [
+        ":all_files",
     ],
 )
 

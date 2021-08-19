@@ -17,16 +17,16 @@ load("//cuda:private/rules/utils.bzl",
 
 def _cuda_toolchain_impl(ctx):
     nvcc_path = None
+    tools = {}
     for tool in ctx.attr.config[CudaToolchainConfigInfo].tools:
-        if tool.basename in ["nvcc", "nvcc.exe"]:
-            nvcc_path = tool.path
-    if nvcc_path == None:
-        fail("Could not find nvcc executable inside provided tools")
+        tools[tool.name] = tool.path
+    if "nvcc" not in tools:
+        fail("Could not find required nvcc tool inside provided tools")
 
     toolchain_info = platform_common.ToolchainInfo(
         cuda_info = CudaToolchainInfo(
-            nvcc_path = nvcc_path,
-            tools = depset(ctx.attr.config[CudaToolchainConfigInfo].tools),
+            tools = tools,
+            all_files = depset(ctx.files.all_files),
             libraries = ctx.files.libraries,
             features = ctx.attr.config[CudaToolchainConfigInfo].features,
             env = ctx.attr.config[CudaToolchainConfigInfo].env,
@@ -42,6 +42,11 @@ cuda_toolchain = rule(
             mandatory = True,
             doc = "CudaToolchainConfigInfo provider",
             providers = [CudaToolchainConfigInfo],
+        ),
+        "all_files": attr.label_list(
+            default = [],
+            doc = "All tools and files required to compile target.",
+            allow_files = True,
         ),
         "libraries": attr.label_list(
             default = [],
@@ -108,7 +113,7 @@ def _cuda_library_impl(ctx):
     )
 
     objs = []
-    nvcc_path = cuda_common.get_nvcc_tool_path(cuda_toolchain)
+    nvcc_path = cuda_common.get_tool_path(cuda_toolchain, "nvcc")
 
     for src in inputs.source_files:
         obj = ctx.actions.declare_file("_objs/" + ctx.attr.name + "/" + src.basename.rpartition(".")[0] + ".pic.o" if use_pic else ".o")
@@ -136,7 +141,7 @@ def _cuda_library_impl(ctx):
             env = combine_env(ctx, host_env, cuda_toolchain.env),
             inputs = depset(
                 [src] + inputs.private_header_files + inputs.public_header_files,
-                transitive = [cc_toolchain.all_files, cuda_toolchain.tools],
+                transitive = [cc_toolchain.all_files, cuda_toolchain.all_files],
             ),
             outputs = [obj],
             mnemonic = "Compiling",
@@ -176,7 +181,7 @@ def _cuda_library_impl(ctx):
             env = combine_env(ctx, host_env, cuda_toolchain.env),
             inputs = depset(
                 objs + inputs.object_files + inputs.static_inputs + inputs.dynamic_inputs,
-                transitive = [cc_toolchain.all_files, cuda_toolchain.tools],
+                transitive = [cc_toolchain.all_files, cuda_toolchain.all_files],
             ),
             outputs = [device_obj],
             mnemonic = "LinkingDeviceCode",
@@ -283,10 +288,12 @@ def _cuda_library_impl(ctx):
             output_files.append(linking_output.library_to_link.interface_library)
         if linking_output.library_to_link.dynamic_library != None:
             output_files.append(linking_output.library_to_link.dynamic_library)
-        for obj in linking_output.library_to_link.objects:
-            output_files.append(obj)
-        for obj in linking_output.library_to_link.pic_objects:
-            output_files.append(obj)
+        if not use_pic:
+            for obj in linking_output.library_to_link.objects:
+                output_files.append(obj)
+        if use_pic:
+            for obj in linking_output.library_to_link.pic_objects:
+                output_files.append(obj)
 
     return [
         DefaultInfo(files = depset(output_files)),

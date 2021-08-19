@@ -122,8 +122,8 @@ def _create_compile_variables(
 
     return variables
 
-def _get_nvcc_tool_path(cuda_toolchain):
-    return cuda_toolchain.nvcc_path
+def _get_tool_path(cuda_toolchain, tool_name):
+    return cuda_toolchain.tools[tool_name]
 
 def _get_memory_inefficient_command_line(
     cuda_toolchain,
@@ -201,6 +201,6 @@ cuda_common = struct(
     create_link_variables = _create_link_variables,
     create_compile_variables = _create_compile_variables,
     create_linking_context = _create_linking_context,
-    get_nvcc_tool_path = _get_nvcc_tool_path,
+    get_tool_path = _get_tool_path,
     get_memory_inefficient_command_line = _get_memory_inefficient_command_line,
 )

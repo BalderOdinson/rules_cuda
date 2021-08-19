@@ -15,6 +15,7 @@ CudaToolchainInfo = provider(
         "tools",
         "libraries",
         "features",
+        "all_files",
         "env",
         "use_default_shell_env",
     ],
