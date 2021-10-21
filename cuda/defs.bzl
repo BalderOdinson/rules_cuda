@@ -133,7 +133,7 @@ def _cuda_library_impl(ctx):
                 action_name = CUDA_ACTION_NAMES.compile,
                 feature_configuration = cuda_features,
                 variables = cuda_compile_variables,
-            ) + [expand_make_variables(opt) for opt in ctx.attr.dcopts]
+            ) + [expand_make_variables(ctx, opt) for opt in ctx.attr.dcopts]
         )
         ctx.actions.run(
             executable = nvcc_path,
@@ -173,7 +173,7 @@ def _cuda_library_impl(ctx):
                 action_name = CUDA_ACTION_NAMES.link,
                 feature_configuration = cuda_features,
                 variables = cuda_link_variables,
-            ) + [expand_make_variables(opt) for opt in ctx.attr.dlinkopts]
+            ) + [expand_make_variables(ctx, opt) for opt in ctx.attr.dlinkopts]
         )
         ctx.actions.run(
             executable = nvcc_path,
