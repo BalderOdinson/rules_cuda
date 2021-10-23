@@ -239,6 +239,6 @@ def combine_env(ctx, host_env, device_env):
     return env
 
 def expand_make_variables(ctx, value):
-    for key, value in ctx.var.items():
-        value = value.replace('$({})'.format(key), value)
+    for k, v in ctx.var.items():
+        value = value.replace('$({})'.format(k), v)
     return value
