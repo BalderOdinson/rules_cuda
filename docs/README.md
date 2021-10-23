@@ -16,8 +16,8 @@ To include CUDA rules add this to your WORKSAPCE:
 ```python
 http_archive(
     name = "rules_cuda",
-    sha256 = "80c210afb4eb9b7c6b7f1b207f15bcb93d06e8d9ae6daf70b807c799904f39f0",
-    urls = ["https://github.com/BalderOdinson/rules_cuda/releases/download/0.0.2/rules_cuda-v0.0.2.tar.gz"],
+    sha256 = "3f320d3cded754891e5e2aa55fe3305eef0a2eabac8bffd117923ca190b6a302",
+    urls = ["https://github.com/BalderOdinson/rules_cuda/releases/download/0.0.3/rules_cuda-v0.0.3.tar.gz"],
 )
 ```
 
